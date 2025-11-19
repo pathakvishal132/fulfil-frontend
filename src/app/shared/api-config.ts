@@ -1,5 +1,5 @@
 // FILE: src/app/shared/api-config.ts
-const BACKEND = 'http://127.0.0.1:8000';
+const BACKEND = 'https://fulfil-backend-production.up.railway.app'
 
 export const API = {
     // Django urls provided in your backend: upload/, upload/status/<job_id>/, products/, products/<id>/, products/bulk-delete/
