@@ -1,0 +1,36 @@
+<div class="wh-container">
+  <h2>Webhooks</h2>
+  <div class="list">
+    <div class="row" *ngFor="let w of webhooks">
+      <div class="url">{{w.url}}</div>
+      <div class="event">{{w.event}}</div>
+      <div class="enabled">{{w.enabled ? 'Enabled' : 'Disabled'}}</div>
+      <div class="actions">
+        <button class="btn" (click)="startEdit(w)">Edit</button>
+        <button class="btn" (click)="test(w)">Test</button>
+        <button class="btn danger" (click)="remove(w)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="add">
+    <button class="btn" (click)="addNew()">Add webhook</button>
+    <div class="status">{{statusMsg}}</div>
+  </div>
+
+
+  <div class="modal" *ngIf="editing">
+    <div class="modal-inner">
+      <h3>{{editing.id ? 'Edit' : 'Add'}} webhook</h3>
+      <label>URL<input [(ngModel)]="editing.url" /></label>
+      <label>Event<input [(ngModel)]="editing.event" /></label>
+      <label>Enabled<select [(ngModel)]="editing.enabled">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select></label>
+      <div class="modal-actions"><button class="btn primary" (click)="save()">Save</button><button class="btn"
+          (click)="cancel()">Cancel</button></div>
+    </div>
+  </div>
+</div>

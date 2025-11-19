@@ -1,0 +1,102 @@
+<div class="pl-container">
+  <div class="pl-header">
+    <h2>Products</h2>
+    <div class="pl-meta">Total: <strong>{{total}}</strong></div>
+    <div class="pl-actions">
+      <button class="btn" (click)="openCreate()">Create</button>
+      <button class="btn danger" (click)="bulkDelete()">Delete All</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input class="filter-input" placeholder="SKU" [(ngModel)]="filters.sku" />
+    <input class="filter-input" placeholder="Name" [(ngModel)]="filters.name" />
+    <select [(ngModel)]="filters.active">
+      <option value="">All</option>
+      <option value="true">Active</option>
+      <option value="false">Inactive</option>
+    </select>
+    <button type="button" class="btn" (click)="page=1; load()">Filter</button>
+    <button type="button" class="btn" (click)="clearFilters()">Clear</button>
+    <div class="spacer"></div>
+    <label class="page-size">Per page:
+      <select [(ngModel)]="pageSize" (change)="page=1; load()">
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+        <option [value]="50">50</option>
+        <option [value]="100">100</option>
+      </select>
+    </label>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading…</div>
+
+  <table class="table" *ngIf="!loading && products.length">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Name</th>
+        <th class="desc">Description</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td class="sku">{{p.sku}}</td>
+        <td>{{p.name}}</td>
+        <td class="desc">{{p.description || '—'}}</td>
+        <td>{{p.active ? 'Yes' : 'No'}}</td>
+        <td>
+          <button class="btn" (click)="startEdit(p)">Edit</button>
+          <button class="btn danger" (click)="deleteOne(p)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !products.length" class="empty">No products found.</div>
+
+  <div class="pagination">
+    <button class="btn" (click)="page = page - 1; load()" [disabled]="page <= 1">Previous</button>
+    <div class="pages">
+      <button class="page" *ngFor="let pNum of pages" (click)="page = pNum; load()"
+        [class.active]="page === pNum">{{pNum}}</button>
+      <span class="page-info">Page {{page}} of {{ totalPages }}</span>
+    </div>
+    <button class="btn" (click)="page = page + 1; load()" [disabled]="page >= totalPages">Next</button>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-backdrop" *ngIf="editing">
+  <div class="modal">
+    <h3>Edit Product</h3>
+    <form (ngSubmit)="saveEdit()">
+      <label class="field">
+        <div class="label">SKU</div>
+        <input type="text" [(ngModel)]="editing.sku" name="sku" [readonly]="editing && editing.id" required />
+      </label>
+
+      <label class="field">
+        <div class="label">Name</div>
+        <input type="text" [(ngModel)]="editing.name" name="name" required />
+      </label>
+
+      <label class="field">
+        <div class="label">Description</div>
+        <textarea rows="3" [(ngModel)]="editing.description" name="description"></textarea>
+      </label>
+
+      <label class="field checkbox-row">
+        <input type="checkbox" [(ngModel)]="editing.active" name="active" />
+        <div class="label">Active</div>
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" (click)="cancelEdit()">Cancel</button>
+        <button type="submit" class="btn primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

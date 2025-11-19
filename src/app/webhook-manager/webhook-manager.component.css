@@ -1,0 +1,5 @@
+.wh-container { background: linear-gradient(180deg, var(--bg-gradient-start), var(--bg-gradient-end)); color: var(--text-main); padding:16px; border-radius:8px; border: 1px solid var(--panel-border); }
+.row { display:flex; gap:8px; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.url { flex:2; }
+.event { flex:1; }
+.actions { display:flex; gap:6px; }

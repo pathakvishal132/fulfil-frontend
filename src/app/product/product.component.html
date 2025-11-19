@@ -1,0 +1,119 @@
+<div class="pi-container">
+  <h2>Product CSV Import</h2>
+
+  <div class="uploader" [class.disabled]="isUploading">
+    <label class="dropzone" for="file-input">
+      <div class="drop-inner">
+        <p *ngIf="!selectedFile">Drag & drop a CSV file here or click to choose</p>
+        <p *ngIf="selectedFile">Selected: {{selectedFile.name}} — {{selectedFile.size | number}} bytes</p>
+      </div>
+      <input id="file-input" type="file" accept=".csv,text/csv" (change)="onFileChosen($event)" />
+    </label>
+
+    <div class="controls">
+      <label class="checkbox"><input type="checkbox" checked /> Overwrite duplicates (by SKU)</label>
+      <button class="btn primary" [disabled]="!selectedFile || isUploading" (click)="startUpload(true)">Start
+        Upload</button>
+      <button class="btn" [disabled]="isUploading" (click)="clear()">Clear</button>
+      <!-- <button class="btn" (click)="fetchProducts(1)">Show products</button> -->
+      <button class="btn" (click)="goToList()">Product Listing</button>
+    </div>
+
+    <div class="progress-wrap" *ngIf="isUploading || progress>0 || totalCount>0 || currentCount>0 || error">
+      <div class="progress-bar" role="progressbar" [style.width.%]="progress"></div>
+      <div class="progress-meta">{{progress}}% — {{statusMessage}}</div>
+      <div class="progress-details" *ngIf="totalRecords">
+        Processed {{currentRecords}} of {{totalRecords}}
+      </div>
+
+      <div class="progress-graph" *ngIf="progressHistory.length">
+        <svg [attr.width]="graphWidth" [attr.height]="graphHeight"
+          [attr.viewBox]="'0 0 ' + graphWidth + ' ' + graphHeight" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="0%">
+              <stop offset="0%" stop-color="#0f62fe" />
+              <stop offset="100%" stop-color="#6f52ff" />
+            </linearGradient>
+          </defs>
+          <polyline [attr.points]="graphPoints" fill="none" stroke="url(#g1)" stroke-width="2" stroke-linejoin="round"
+            stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="upload-progress-info" *ngIf="showProgressInfo">
+        <div class="numbers">
+          <span>Processed: <strong>{{ currentCount }}</strong></span>
+          <span>Total: <strong>{{ totalCount }}</strong></span>
+          <span *ngIf="totalCount > 0">({{ percentage }}%)</span>
+        </div>
+
+        <div class="progress-bar" *ngIf="totalCount > 0">
+          <div class="progress-fill" [style.width.%]="percentage"></div>
+        </div>
+      </div>
+
+      <div class="error" *ngIf="error">Error: {{error}} <button class="btn" (click)="startUpload(true)">Retry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product-list" *ngIf="showProducts">
+  <div class="list-header">
+    <h3>Products ({{totalProducts}} total)</h3>
+    <div class="page-size-selector">
+      <label>Show: </label>
+      <select (change)="onPageSizeChange($event)" [value]="pageSize">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Name</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>{{p.sku}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.active ? 'Yes' : 'No'}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button class="btn pagination-btn" [disabled]="currentPage === 1" (click)="previousPage()">
+      &laquo; Previous
+    </button>
+
+    <div class="page-numbers">
+      <button *ngFor="let page of pages" class="btn pagination-btn page-number" [class.active]="page === currentPage"
+        (click)="goToPage(page)">
+        {{page}}
+      </button>
+
+      <span class="page-ellipsis" *ngIf="totalPages > pages[pages.length - 1] + 1">...</span>
+
+      <button *ngIf="totalPages > pages[pages.length - 1]" class="btn pagination-btn page-number"
+        [class.active]="totalPages === currentPage" (click)="goToPage(totalPages)">
+        {{totalPages}}
+      </button>
+    </div>
+
+    <button class="btn pagination-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+      Next &raquo;
+    </button>
+  </div>
+
+  <div class="pagination-info">
+    Showing {{getDisplayRange().start}} to {{getDisplayRange().end}} of {{totalProducts}} products
+  </div>
+</div>
