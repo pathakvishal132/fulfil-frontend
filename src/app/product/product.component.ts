@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.css', './product.component2.css']
 })
 export class ProductComponent implements OnDestroy {
   selectedFile: File | null = null;

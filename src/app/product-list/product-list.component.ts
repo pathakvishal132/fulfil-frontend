@@ -11,7 +11,9 @@ import { Product } from '../shared/model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: [
+    './product-list.component.css', './product-list.component2.css'
+  ]
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
