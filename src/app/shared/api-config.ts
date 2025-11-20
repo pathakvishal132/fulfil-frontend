@@ -1,5 +1,5 @@
 // FILE: src/app/shared/api-config.ts
-const BACKEND = 'https://fulfil-backend-production.up.railway.app'
+const BACKEND = 'https://fulfil-backend.vercel.app'
 
 export const API = {
     // Django urls provided in your backend: upload/, upload/status/<job_id>/, products/, products/<id>/, products/bulk-delete/
